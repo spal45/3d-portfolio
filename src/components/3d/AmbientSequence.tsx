@@ -15,8 +15,9 @@ export function AmbientSequence() {
   const progressRef = useRef(0);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    // ~1.4 loops over the full page
-    progressRef.current = (v * 1.4) % 1;
+    // play the scene straight through across the whole page (cinematic clip,
+    // not a seamless loop, so no wrap)
+    progressRef.current = Math.min(1, Math.max(0, v));
   });
 
   if (!ready) return null;

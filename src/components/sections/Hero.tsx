@@ -46,8 +46,9 @@ export function Hero() {
         </motion.div>
 
         {/* fallback + legibility */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_30%,rgba(5,5,5,0.75)_85%)]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_25%,rgba(5,5,5,0.72)_88%)]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/45 to-transparent md:via-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/35 to-transparent" />
 
         {/* copy */}
         <motion.div

@@ -1,7 +1,7 @@
 export const SEQUENCE = {
   count: 120,
-  width: 1440,
-  height: 810,
+  width: 1200,
+  height: 676,
   dir: "/sequence",
 } as const;
 
