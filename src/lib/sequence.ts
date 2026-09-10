@@ -1,0 +1,10 @@
+export const SEQUENCE = {
+  count: 120,
+  width: 1440,
+  height: 810,
+  dir: "/sequence",
+} as const;
+
+export function framePath(i: number): string {
+  return `${SEQUENCE.dir}/frame-${String(i).padStart(3, "0")}.jpg`;
+}
