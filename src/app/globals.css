@@ -62,6 +62,68 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Animated aurora backdrop — slowly drifting dark gradient behind everything */
+.bg-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0b0b16 0%, #09090b 45%, #0c0912 100%);
+}
+
+.bg-aurora__blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.bg-aurora__blob--1 {
+  top: -20%;
+  left: -12%;
+  width: 65vw;
+  height: 65vw;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.42), transparent 66%);
+  animation: aurora-drift-a 28s ease-in-out infinite;
+}
+
+.bg-aurora__blob--2 {
+  bottom: -25%;
+  right: -12%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.38), transparent 66%);
+  animation: aurora-drift-b 34s ease-in-out infinite;
+}
+
+.bg-aurora__blob--3 {
+  top: 25%;
+  left: 45%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.16), transparent 65%);
+  animation: aurora-drift-a 42s ease-in-out infinite reverse;
+}
+
+@keyframes aurora-drift-a {
+  0%,
+  100% {
+    transform: translate3d(-4%, -3%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(7%, 5%, 0) scale(1.18);
+  }
+}
+
+@keyframes aurora-drift-b {
+  0%,
+  100% {
+    transform: translate3d(5%, 4%, 0) scale(1.12);
+  }
+  50% {
+    transform: translate3d(-7%, -6%, 0) scale(0.92);
+  }
+}
+
 /* Above-the-fold entrance — CSS only, so it survives slow JS / hidden tabs */
 @keyframes rise {
   from {
