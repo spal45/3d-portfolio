@@ -30,7 +30,7 @@ export function Hero() {
   const canvasOpacity = useTransform(
     scrollYProgress,
     [0, 0.45, 1],
-    [0.9, 1, 0.5],
+    [0.45, 0.55, 0.3],
   );
   const hudOpacity = useTransform(scrollYProgress, [0.45, 0.7, 1], [0, 1, 0.7]);
 
@@ -49,7 +49,6 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_25%,rgba(5,5,5,0.72)_88%)]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/45 to-transparent md:via-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/35 to-transparent" />
-
         {/* copy */}
         <motion.div
           style={{ opacity: textOpacity, y: textY }}
