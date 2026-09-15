@@ -9,12 +9,35 @@ import { cn } from "@/lib/cn";
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = site.nav
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+        const topMost = visible.reduce((a, b) =>
+          a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+        );
+        setActive(topMost.target.id);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -40,7 +63,11 @@ export function Nav() {
             <a
               key={item.id}
               href={`#${item.id}`}
-              className="label transition-colors hover:text-[var(--color-fg)]"
+              aria-current={active === item.id ? "true" : undefined}
+              className={cn(
+                "label transition-colors hover:text-[var(--color-fg)]",
+                active === item.id && "label--accent",
+              )}
             >
               {item.label}
             </a>
@@ -77,7 +104,13 @@ export function Nav() {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={() => setOpen(false)}
-                  className="py-3 font-mono text-sm text-[var(--color-fg)]"
+                  aria-current={active === item.id ? "true" : undefined}
+                  className={cn(
+                    "py-3 font-mono text-sm transition-colors",
+                    active === item.id
+                      ? "text-[var(--color-accent)]"
+                      : "text-[var(--color-fg)]",
+                  )}
                 >
                   {item.label}
                 </a>
