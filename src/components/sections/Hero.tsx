@@ -55,7 +55,6 @@ export function Hero() {
           className="relative mx-auto w-full max-w-6xl px-6 md:px-10"
         >
           <div className="flex items-center gap-3">
-            <span className="h-px w-10 bg-[var(--color-accent)]" />
             <span className="label label--accent rise" style={{ animationDelay: "0.1s" }}>
               {hero.kicker}
             </span>
@@ -66,7 +65,9 @@ export function Hero() {
             style={{ animationDelay: "0.2s" }}
           >
             <span className="block">Hello, I&apos;m</span>
-            <span className="outline-text block">{site.firstName}.</span>
+            <span className="block font-bold text-[var(--color-fg)]">
+              {site.firstName}.
+            </span>
           </h1>
 
           <div className="mt-10 grid max-w-3xl gap-8 sm:grid-cols-2">
