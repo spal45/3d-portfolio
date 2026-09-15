@@ -1,5 +1,5 @@
 export const SEQUENCE = {
-  count: 120,
+  count: 101, // frame-000 .. frame-100
   width: 1200,
   height: 676,
   dir: "/sequence",

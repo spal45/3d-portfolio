@@ -3,11 +3,11 @@
 //
 //   node scripts/render-sequence.mjs
 //
-// Output: public/sequence/frame-000.jpg ... frame-(N-1).jpg + manifest.json
-// Keep FPS/WIDTH in sync with src/lib/sequence.ts (count = FPS * video seconds).
+// Output: public/sequence/frame-000.jpg ... frame-(MAX_FRAMES-1).jpg + manifest.json
+// Keep FPS/WIDTH/MAX_FRAMES in sync with src/lib/sequence.ts's { count, width, height }.
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,9 +15,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = join(root, "scripts", "source-video.mp4");
 const OUT = join(root, "public", "sequence");
 
-const FPS = 12; // 12fps * 10s clip = 120 frames
+const FPS = 12; // 12fps * 10s clip = 120 frames before trimming
 const WIDTH = 1200; // height derived from the source aspect ratio
 const QUALITY = 7; // ffmpeg -q:v, lower = better/heavier
+const MAX_FRAMES = 101; // trimmed to frame-000..frame-100 — raise/drop to use the full clip
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
@@ -36,7 +37,11 @@ execFileSync(
   { stdio: "inherit" },
 );
 
-const files = readdirSync(OUT).filter((f) => f.endsWith(".jpg"));
+let files = readdirSync(OUT).filter((f) => f.endsWith(".jpg")).sort();
+if (MAX_FRAMES && files.length > MAX_FRAMES) {
+  for (const f of files.slice(MAX_FRAMES)) unlinkSync(join(OUT, f));
+  files = files.slice(0, MAX_FRAMES);
+}
 const probe = execFileSync("ffprobe", [
   "-v", "error",
   "-select_streams", "v:0",
