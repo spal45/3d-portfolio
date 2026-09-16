@@ -1,0 +1,7 @@
+{
+  "frames": 101,
+  "width": 1200,
+  "height": 676,
+  "pattern": "frame-%03d.jpg",
+  "source": "source-video.mp4 @ 12fps (trimmed to frame-000..frame-100)"
+}

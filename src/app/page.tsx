@@ -1,27 +1,33 @@
-import CanvasContainer from "@/components/3d/CanvasContainer";
-import { Navbar } from "@/components/layout/Navbar";
+import { Preloader } from "@/components/system/Preloader";
+import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
-import { ScrollProgressBar } from "@/components/layout/ScrollProgressBar";
+import { BackToTop } from "@/components/layout/BackToTop";
+import { AmbientSequence } from "@/components/3d/AmbientSequence";
 import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Skills } from "@/components/sections/Skills";
-import { Experience } from "@/components/sections/Experience";
-import { Projects } from "@/components/sections/Projects";
+import { Pitch } from "@/components/sections/Pitch";
+import { TrackRecord } from "@/components/sections/TrackRecord";
+import { Work } from "@/components/sections/Work";
+import { Arsenal } from "@/components/sections/Arsenal";
+import { Philosophy } from "@/components/sections/Philosophy";
+import { WhyHire } from "@/components/sections/WhyHire";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
     <>
-      <CanvasContainer />
-      <ScrollProgressBar />
-      <Navbar />
+      <Preloader />
+      <AmbientSequence />
+      <Nav />
+      <BackToTop />
 
       <main className="relative z-10">
         <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
+        <Pitch />
+        <TrackRecord />
+        <Work />
+        <Arsenal />
+        <Philosophy />
+        <WhyHire />
         <Contact />
       </main>
 

@@ -1,75 +1,120 @@
-import { ArrowDown } from "lucide-react";
+"use client";
+
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
 import { hero, site } from "@/content/site";
-import { ButtonLink } from "@/components/ui/Button";
+import { FrameCanvas } from "@/components/3d/FrameCanvas";
+import { useAssets } from "@/components/system/AssetLoader";
 
 export function Hero() {
+  const ref = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
+  const { ready } = useAssets();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    progressRef.current = v;
+  });
+
+  const textOpacity = useTransform(scrollYProgress, [0, 0.32, 0.5], [1, 1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 0.5], [0, -70]);
+  const canvasOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.45, 1],
+    [0.45, 0.55, 0.3],
+  );
+  const hudOpacity = useTransform(scrollYProgress, [0.45, 0.7, 1], [0, 1, 0.7]);
+
   return (
-    <section
-      id="hero"
-      className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-6 py-28 md:px-8"
-    >
-      <p
-        className="rise mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--color-accent)]/20 bg-[var(--color-accent)]/10 px-3 py-1 font-mono text-xs uppercase tracking-wider text-indigo-300"
-        style={{ animationDelay: "0.05s" }}
-      >
-        {hero.eyebrow}
-      </p>
+    <section id="hero" ref={ref} className="relative h-[280vh]">
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden">
+        {/* engine sequence */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ opacity: ready ? canvasOpacity : 0 }}
+        >
+          <FrameCanvas progressRef={progressRef} ease={10} />
+        </motion.div>
 
-      <h1 className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-        {hero.headline.map((line, i) => (
-          <span
-            key={line}
-            className="rise block"
-            style={{ animationDelay: `${0.15 + i * 0.12}s` }}
+        {/* fallback + legibility */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_25%,rgba(5,5,5,0.72)_88%)]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/45 to-transparent md:via-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/35 to-transparent" />
+        {/* copy */}
+        <motion.div
+          style={{ opacity: textOpacity, y: textY }}
+          className="relative mx-auto w-full max-w-6xl px-6 md:px-10"
+        >
+          <div className="flex items-center gap-3">
+            <span className="label label--accent rise" style={{ animationDelay: "0.1s" }}>
+              {hero.kicker}
+            </span>
+          </div>
+
+          <h1
+            className="rise mt-4 text-[13vw] font-semibold leading-[0.92] tracking-tight md:text-[8.5rem]"
+            style={{ animationDelay: "0.2s" }}
           >
-            {i === hero.headline.length - 1 ? (
-              <span className="bg-gradient-to-r from-indigo-300 via-white to-violet-300 bg-clip-text text-transparent">
-                {line}
-              </span>
-            ) : (
-              line
-            )}
-          </span>
-        ))}
-      </h1>
+            <span className="block">Hello, I&apos;m</span>
+            <span className="block font-bold text-[var(--color-fg)]">
+              {site.firstName}.
+            </span>
+          </h1>
 
-      <p
-        className="rise mt-6 max-w-xl text-base text-zinc-400 md:text-lg"
-        style={{ animationDelay: "0.4s" }}
-      >
-        {hero.sub}
-      </p>
+          <div className="mt-10 grid max-w-3xl gap-8 sm:grid-cols-2">
+            <div className="rise" style={{ animationDelay: "0.4s" }}>
+              <p className="label">{hero.specializationLabel}</p>
+              <p className="mt-2 font-mono text-sm text-[var(--color-fg)]">
+                {hero.specialization.map((l) => (
+                  <span key={l} className="block">
+                    {l}
+                  </span>
+                ))}
+              </p>
+            </div>
+            <div className="rise" style={{ animationDelay: "0.5s" }}>
+              <p className="label">{hero.focusLabel}</p>
+              <p className="mt-2 font-mono text-sm text-[var(--color-fg)]">
+                {hero.focus}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
+                {hero.focusSub}
+              </p>
+            </div>
+          </div>
+        </motion.div>
 
-      <div
-        className="rise mt-9 flex flex-wrap gap-4"
-        style={{ animationDelay: "0.55s" }}
-      >
-        {hero.ctas.map((cta) => (
-          <ButtonLink
-            key={cta.label}
-            href={cta.href}
-            variant={cta.primary ? "primary" : "outline"}
-            {...(cta.href.startsWith("/")
-              ? { target: "_blank", rel: "noreferrer" }
-              : {})}
+        {/* HUD corner readout that appears as the engine is revealed */}
+        <motion.div
+          style={{ opacity: hudOpacity }}
+          className="pointer-events-none absolute bottom-8 left-6 flex items-center gap-3 md:left-10"
+        >
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
+          <span className="label label--accent">Engine online</span>
+        </motion.div>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <motion.span
+            className="label"
+            animate={{ opacity: [0.3, 1, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            {cta.label}
-          </ButtonLink>
-        ))}
-      </div>
+            {hero.scrollCue}
+          </motion.span>
+        </div>
 
-      <a
-        href="#about"
-        aria-label="Scroll to about"
-        className="rise absolute bottom-10 left-6 flex items-center gap-2 text-xs text-zinc-500 md:left-8"
-        style={{ animationDelay: "1s" }}
-      >
-        <ArrowDown size={14} className="animate-bounce" />
-        Scroll
-      </a>
-
-      <div className="absolute bottom-10 right-6 hidden text-right font-mono text-xs text-zinc-600 md:block md:right-8">
-        {site.location}
+        <div className="absolute bottom-8 right-6 hidden font-mono text-xs text-[var(--color-faint)] md:block md:right-10">
+          {site.location}
+        </div>
       </div>
     </section>
   );

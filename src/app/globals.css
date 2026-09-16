@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #09090b;
-  --color-fg: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-faint: #71717a;
-  --color-accent: #6366f1;
-  --color-accent-2: #a855f7;
-  --color-line: rgba(244, 244, 245, 0.08);
+  --color-bg: #050505;
+  --color-surface: #0b0b0d;
+  --color-fg: #f5f5f7;
+  --color-muted: #9a9aa2;
+  --color-faint: #62626a;
+  --color-accent: #39ff6e;
+  --color-accent-hot: #b6ffcf;
+  --color-line: rgba(245, 245, 247, 0.09);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --background: #050505;
+  --foreground: #f5f5f7;
 }
 
 * {
@@ -25,6 +26,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
+  background: #050505;
 }
 
 body {
@@ -34,57 +36,91 @@ body {
   overflow-x: hidden;
 }
 
+/* scroll is locked by the preloader until assets are ready */
+body[data-loading="true"] {
+  overflow: hidden;
+}
+
 ::selection {
-  background: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
   color: #fff;
 }
 
-/* Thin, dark scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #1f1f22;
   border-radius: 9999px;
 }
 
-/* Subtle film-grain overlay applied via body::after */
+/* ---- terminal / mono UI primitives ---- */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.label--accent {
+  color: var(--color-accent);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--color-line);
+}
+
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245, 245, 247, 0.22);
+}
+
+/* film grain */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 200;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Above-the-fold entrance — CSS only, so it survives slow JS / hidden tabs */
+/* CSS-only entrance for above-the-fold content */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-
 .rise {
-  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise {
-    animation: none;
-  }
-
   html {
     scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
   }
   *,
   *::before,

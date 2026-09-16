@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Check, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { contact, site } from "@/content/site";
-import { Section } from "@/components/ui/Section";
-import { Button } from "@/components/ui/Button";
-import { fadeUp } from "@/lib/motion";
+import { Section, Reveal, Headline } from "@/components/ui/Section";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -18,7 +16,6 @@ export function Contact() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form));
-
     setStatus("sending");
     setError(null);
     try {
@@ -38,87 +35,120 @@ export function Contact() {
   }
 
   return (
-    <Section id="contact" index={contact.index} heading={contact.heading}>
-      <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-        <motion.div variants={fadeUp} className="space-y-6">
-          <p className="text-base text-zinc-400 md:text-lg">{contact.blurb}</p>
-          <ul className="space-y-4 text-sm">
-            <li>
-              <a
-                href={`mailto:${site.email}`}
-                className="flex items-center gap-3 text-zinc-300 transition-colors hover:text-white"
-              >
-                <Mail size={16} className="text-[var(--color-accent)]" />
-                {site.email}
-              </a>
-            </li>
-            <li>
-              <a
-                href={site.phoneHref}
-                className="flex items-center gap-3 text-zinc-300 transition-colors hover:text-white"
-              >
-                <Phone size={16} className="text-[var(--color-accent)]" />
-                {site.phone}
-              </a>
-            </li>
-            <li className="flex items-center gap-3 text-zinc-400">
-              <MapPin size={16} className="text-[var(--color-accent)]" />
-              {site.location}
-            </li>
-          </ul>
-        </motion.div>
+    <Section id="contact" label={contact.label}>
+      <Headline lines={contact.headline} />
+      <Reveal
+        delay={0.05}
+        className="mt-6 max-w-xl text-base leading-relaxed text-[var(--color-muted)]"
+      >
+        {contact.blurb}
+      </Reveal>
 
-        <motion.form
-          variants={fadeUp}
-          onSubmit={onSubmit}
-          className="space-y-4"
-          noValidate
-        >
-          {/* honeypot */}
-          <input
-            type="text"
-            name="company"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden
-            className="absolute left-[-9999px] h-0 w-0 opacity-0"
-          />
-
-          <Field label="Name" name="name" type="text" required />
-          <Field label="Email" name="email" type="email" required />
+      <div className="mt-16 grid gap-12 border-t border-[var(--color-line)] pt-12 md:grid-cols-2 md:gap-16">
+        <Reveal className="space-y-8">
           <div>
-            <label
-              htmlFor="message"
-              className="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500"
+            <p className="label">Email</p>
+            <a
+              href={`mailto:${site.email}`}
+              className="mt-1 block font-mono text-sm text-[var(--color-fg)] hover:text-[var(--color-accent)]"
             >
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              required
-              rows={5}
-              minLength={10}
-              className="w-full resize-y rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-[var(--color-accent)]"
-            />
+              {site.email}
+            </a>
           </div>
+          <div>
+            <p className="label">Phone</p>
+            <a
+              href={site.phoneHref}
+              className="mt-1 block font-mono text-sm text-[var(--color-fg)] hover:text-[var(--color-accent)]"
+            >
+              {site.phone}
+            </a>
+          </div>
+          <div>
+            <p className="label">Location</p>
+            <p className="mt-1 font-mono text-sm text-[var(--color-fg)]">
+              {site.location}
+            </p>
+          </div>
+          <div>
+            <p className="label">Elsewhere</p>
+            <div className="mt-2 flex items-center gap-4">
+              <a
+                href={site.socials.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="text-[var(--color-muted)] hover:text-[var(--color-fg)]"
+              >
+                <GithubIcon size={18} />
+              </a>
+              <a
+                href={site.socials.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                className="text-[var(--color-muted)] hover:text-[var(--color-fg)]"
+              >
+                <LinkedinIcon size={18} />
+              </a>
+              <a
+                href={site.resumePath}
+                target="_blank"
+                rel="noreferrer"
+                className="label label--accent"
+              >
+                Résumé ↗
+              </a>
+            </div>
+          </div>
+        </Reveal>
 
-          <div className="flex items-center gap-4 pt-1">
-            <Button type="submit" disabled={status === "sending"}>
+        <Reveal delay={0.05}>
+          <form onSubmit={onSubmit} className="space-y-5" noValidate>
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden
+              className="absolute left-[-9999px] h-0 w-0 opacity-0"
+            />
+            <Field label="Name" name="name" type="text" />
+            <Field label="Email" name="email" type="email" />
+            <div>
+              <label htmlFor="message" className="label">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                minLength={10}
+                className="mt-2 w-full resize-y border-b border-[var(--color-line)] bg-transparent pb-2 font-mono text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent)]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="inline-flex items-center gap-2 border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/10 px-5 py-3 font-mono text-xs uppercase tracking-widest text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)]/20 disabled:opacity-60"
+            >
               {status === "sending" && (
-                <Loader2 size={15} className="animate-spin" />
+                <Loader2 size={14} className="animate-spin" />
               )}
-              {status === "sent" && <Check size={15} />}
+              {status === "sent" && <Check size={14} />}
               {status === "sent"
-                ? "Sent"
+                ? "Message sent"
                 : status === "sending"
-                  ? "Sending…"
+                  ? "Transmitting..."
                   : "Send message"}
-            </Button>
+            </button>
+
             <p aria-live="polite" className="text-xs">
               {status === "sent" && (
-                <span className="text-emerald-400">
-                  Thanks — I&apos;ll get back to you.
+                <span className="text-[var(--color-accent)]">
+                  Received — I&apos;ll get back to you.
                 </span>
               )}
               {status === "error" && (
@@ -133,8 +163,8 @@ export function Contact() {
                 </span>
               )}
             </p>
-          </div>
-        </motion.form>
+          </form>
+        </Reveal>
       </div>
     </Section>
   );
@@ -144,27 +174,22 @@ function Field({
   label,
   name,
   type,
-  required,
 }: {
   label: string;
   name: string;
   type: string;
-  required?: boolean;
 }) {
   return (
     <div>
-      <label
-        htmlFor={name}
-        className="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500"
-      >
+      <label htmlFor={name} className="label">
         {label}
       </label>
       <input
         id={name}
         name={name}
         type={type}
-        required={required}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-[var(--color-accent)]"
+        required
+        className="mt-2 w-full border-b border-[var(--color-line)] bg-transparent pb-2 font-mono text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent)]"
       />
     </div>
   );
