@@ -16,9 +16,8 @@ export const site = {
   status: "Open to opportunities",
 
   socials: {
-    // TODO: replace with real profile URLs
-    github: "https://github.com/",
-    linkedin: "https://www.linkedin.com/in/",
+    github: "https://github.com/spal45",
+    linkedin: "https://www.linkedin.com/in/subhankarpal45/",
   },
 
   nav: [
@@ -140,7 +139,7 @@ export const work = {
       ],
       stack: ["Next.js", "Node.js", "Socket.IO", "MongoDB", "Redis", "RabbitMQ", "Docker"],
       link: "https://chatapp-sp.up.railway.app/login",
-      image: "/projects/chatapp.svg",
+      image: "/projects/chatapp.png",
     },
     {
       name: "Digital Wallet Ledger",
@@ -156,8 +155,8 @@ export const work = {
         "Interactive OpenAPI docs and a Docker-based deploy identical locally and in production",
       ],
       stack: ["NestJS", "PostgreSQL", "Prisma", "Docker", "GitHub Actions", "Jest"],
-      link: "https://digitalwalletledger-production.up.railway.app/docs",
-      image: "/projects/digital-wallet-ledger.svg",
+      link: "https://digital-wallet-ledger-iu73.onrender.com/docs",
+      image: "/projects/digital-wallet-ledger.png",
     },
   ],
 } as const;
