@@ -16,8 +16,8 @@ export const site = {
   status: "Open to opportunities",
 
   socials: {
-    // TODO: replace with real profile URLs
-    github: "https://github.com/",
+    github: "https://github.com/spal45",
+    // TODO: confirm your LinkedIn profile URL
     linkedin: "https://www.linkedin.com/in/",
   },
 
@@ -140,7 +140,7 @@ export const work = {
       ],
       stack: ["Next.js", "Node.js", "Socket.IO", "MongoDB", "Redis", "RabbitMQ", "Docker"],
       link: "https://chatapp-sp.up.railway.app/login",
-      image: "/projects/chatapp.svg",
+      image: "/projects/chatapp.png",
     },
     {
       name: "Digital Wallet Ledger",
